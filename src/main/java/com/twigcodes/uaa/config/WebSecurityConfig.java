@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @RequiredArgsConstructor
 @Configuration
@@ -33,14 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Create a quick in memory list of two users (with different roles) who can login to the system:
-     * - user - password
-     * - admin - password
-     *
-     * @param auth
-     * @throws Exception
-     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -52,18 +45,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring()
             .antMatchers(HttpMethod.OPTIONS, "/**")
-            .antMatchers("/h2-console**")
-            .antMatchers("/test/**");
+            .antMatchers("/webjars/**", "/resources/**", "/h2-console/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .headers().frameOptions().disable()
+        http.headers().frameOptions().disable()
             .and()
                 .authorizeRequests()
-                .antMatchers("/h2-console**").permitAll()
-                .antMatchers("/clients**").authenticated();
+                .antMatchers("/login","/logout.do").permitAll()
+                .antMatchers("/**").authenticated()
+            .and()
+                .formLogin()
+                .loginProcessingUrl("/login.do")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .loginPage("/login")
+            .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout.do"))
+            .and()
+                .userDetailsService(userDetailsServiceBean());
 
     }
 }

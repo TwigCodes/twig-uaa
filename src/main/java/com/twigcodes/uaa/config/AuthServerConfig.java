@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -76,6 +77,11 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     protected AuthorizationCodeServices authorizationCodeServices() {
         //授权码存储等处理方式类，使用 jdbc，操作 oauth_code 表
         return new JdbcAuthorizationCodeServices(dataSource);
+    }
+
+    @Bean
+    public JdbcClientDetailsService jdbcClientDetailsService() {
+        return new JdbcClientDetailsService(dataSource);
     }
 
     @Bean

@@ -3,12 +3,6 @@ spring:
     active: dev
   jooq:
     sql-dialect: mysql
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_ENDPOINT}/twigauth?useSSL=false
-    username: root
-    password: ENC(eKw2P1jyrqKKs6KVg9Ql9iaJC8ve2kD8)
 # 定义服务端口
 server:
   port: 8095
@@ -46,6 +40,15 @@ logging:
 
 spring:
   profiles: prod
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1 FROM DUAL
+      minimum-idle: 1
+      maximum-pool-size: 5
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_ENDPOINT}/twigauth?useSSL=false
+    username: root
+    password: ENC(eKw2P1jyrqKKs6KVg9Ql9iaJC8ve2kD8)
   rabbitmq:
     host: rabbitmq
     port: 5672
