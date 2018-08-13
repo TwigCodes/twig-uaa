@@ -1,0 +1,68 @@
+spring:
+  profiles:
+    active: dev
+  jooq:
+    sql-dialect: mysql
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_ENDPOINT}/twigauth?useSSL=false
+    username: root
+    password: ENC(eKw2P1jyrqKKs6KVg9Ql9iaJC8ve2kD8)
+# 定义服务端口
+server:
+  port: 8095
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+auth.jwtSigningKey: mySecret
+
+---
+spring:
+  profiles: dev
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_UPPER=false
+    username: sa
+    password:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  flyway:
+    locations: classpath:db/migration/dev
+  h2:
+    console:
+      enabled: true
+logging:
+  level:
+    root: ERROR
+    org.springframework: DEBUG
+    org.hibernate: DEBUG
+    com.netflix.eureka: 'OFF'
+---
+
+spring:
+  profiles: prod
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  flyway:
+    locations: "classpath:db/migration/prod"
+logging:
+  level:
+    root: ERROR
+    org.springframework: ERROR
+    org.hibernate: ERROR
+eureka:
+  instance:
+    hostname: uaa
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/

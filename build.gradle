@@ -1,0 +1,90 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+        springbootAdminVersion = '2.0.2'
+        jooqVersion = '3.11.4'
+        flywayVersion = '5.1.4'
+        h2Version = '1.4.197'
+        gradleJooqVersion = '3.0.1'
+        hikariCPVersion = '3.1.0'
+        problemVersion = '0.21.0'
+        javassistVersion = '3.18.2-GA'
+    }
+    repositories {
+        maven { setUrl('http://maven.aliyun.com/nexus/content/groups/public/') }
+        maven { setUrl('http://maven.aliyun.com/nexus/content/repositories/central') }
+        maven { setUrl('http://repo.spring.io/plugins-release') }
+        maven { setUrl("https://plugins.gradle.org/m2/") }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "com.h2database:h2:${h2Version}"
+        classpath "nu.studer:gradle-jooq-plugin:${gradleJooqVersion}"
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "5.1.4"
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'nu.studer.jooq'
+
+group = 'com.twigcodes'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+apply from: './gradle/docker.gradle'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    // 如果使用 undertow 或 jetty 需要把默认包含的 tomcat 排除在外
+    compile.exclude module: 'spring-boot-starter-tomcat'
+}
+
+ext {
+    springCloudVersion = 'Finchley.SR1'
+}
+
+dependencies {
+    compile("com.zaxxer:HikariCP:${hikariCPVersion}")
+    compile("org.jooq:jooq:${jooqVersion}")
+    compile("org.flywaydb:flyway-core:${flywayVersion}")
+    compile("org.zalando:problem-spring-web:${problemVersion}")
+    compile("org.javassist:javassist:${javassistVersion}")
+    compile("com.fasterxml.jackson.module:jackson-module-afterburner")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-undertow")
+    compile("org.springframework.cloud:spring-cloud-starter-config")
+    compile("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    compile("org.springframework.cloud:spring-cloud-starter-oauth2")
+    runtime('org.springframework.boot:spring-boot-devtools')
+    runtime("mysql:mysql-connector-java")
+    runtime("com.h2database:h2")
+    compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly('org.projectlombok:lombok')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+flyway {
+    url = 'jdbc:h2:./db/tmp;MODE=MySQL;DATABASE_TO_UPPER=false;'
+    user = 'sa'
+    password = ''
+}
