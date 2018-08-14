@@ -59,11 +59,13 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
     driverClassName: com.mysql.jdbc.Driver
-    url: ${MYSQL_URI:jdbc:mysql://${MYSQL_ENDPOINT}/twigauth?useSSL=false}
-    username: root
-    password: ENC(eKw2P1jyrqKKs6KVg9Ql9iaJC8ve2kD8)
+    url: jdbc:mysql://${MYSQL_ENDPOINT:localhost:3306}/${MYSQL_DATABASE:twig_auth}?useSSL=false
+    username: ${MYSQL_USERNAME:test}
+    password: ${MYSQL_PASSWORD:pass}
   flyway:
     locations: "classpath:db/migration/prod"
+    user: ${MYSQL_USERNAME:test}
+    password: ${MYSQL_PASSWORD:pass}
 logging:
   level:
     root: ERROR

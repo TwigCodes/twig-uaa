@@ -3,9 +3,9 @@ VALUES ('test_client', NULL, '$2a$10$2szDKjvKHJCWE6YQNznogOeQF3USZHmCYj1fG7YbfK.
 # 用户
 INSERT INTO users (id, username, password, enabled, account_non_expired, credentials_non_expired, account_non_locked, name, mobile, email, avatar, pinyin_name_initials, created_time, updated_time, created_by, updated_by)
 VALUES
-  (101, 'admin', '$2a$10$vYA9wKn/hVGOtwQw2eHiceeIGNBdfLYpDmbzHgBSVmOfHXPH4iYdS', 'true', 'true', 'true', 'true',
+  (101, 'admin', '$2a$10$vYA9wKn/hVGOtwQw2eHiceeIGNBdfLYpDmbzHgBSVmOfHXPH4iYdS', true, true, true, true,
         '超级管理员', '13000000000', 'admin@local.dev', '', 'cjgly', now(), now(), 'system', 'system'),
-  (102, 'test', '$2a$10$vYA9wKn/hVGOtwQw2eHiceeIGNBdfLYpDmbzHgBSVmOfHXPH4iYdS', 'true', 'true', 'true', 'true',
+  (102, 'test', '$2a$10$vYA9wKn/hVGOtwQw2eHiceeIGNBdfLYpDmbzHgBSVmOfHXPH4iYdS', true, true, true, true,
         '普通管理员', 15619841000, 'putong@local.dev', '', 'ptgly', now(), now(), 'system', 'system');
 # 岗位
 INSERT INTO positions (id, name, description, created_time, updated_time, created_by, updated_by)
