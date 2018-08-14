@@ -28,7 +28,7 @@ public class ClientController {
     }
 
     @RequestMapping(value="/form",method= RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_OAUTH_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String showEditForm(@RequestParam(value="client",required=false)String clientId, Model model){
         ClientDetails clientDetails;
         if(clientId !=null){
@@ -41,9 +41,8 @@ public class ClientController {
         return "form";
     }
 
-
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_OAUTH_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String editClient(
         @ModelAttribute BaseClientDetails clientDetails,
         @RequestParam(value = "newClient", required = false) String newClient
