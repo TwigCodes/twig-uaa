@@ -1,4 +1,4 @@
-package com.twigcodes.uaa.web.rest;
+package com.twigcodes.uaa.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-public class LoginResource {
+public class LoginController {
     private final JdbcClientDetailsService clientDetailsService;
     private final ApprovalStore approvalStore;
     private final TokenStore tokenStore;

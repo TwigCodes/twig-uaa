@@ -1,4 +1,4 @@
-package com.twigcodes.uaa.web.rest;
+package com.twigcodes.uaa.web.controller;
 
 import com.twigcodes.uaa.web.editor.AuthorityPropertyEditor;
 import com.twigcodes.uaa.web.editor.SplitCollectionEditor;
@@ -19,7 +19,7 @@ import java.util.Set;
 @Controller
 @RequestMapping("/clients")
 @RequiredArgsConstructor
-public class ClientResource {
+public class ClientController {
     private final JdbcClientDetailsService clientsDetailsService;
     @InitBinder
     public void initBinder(WebDataBinder binder){
