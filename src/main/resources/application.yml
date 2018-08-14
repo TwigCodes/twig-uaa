@@ -11,6 +11,13 @@ spring:
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USERNAME:guest}
     password: ${RABBITMQ_PASSWORD:guest}
+management:
+  endpoints:
+    # 让所有监控接口都接受 web 访问
+    web.exposure.include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
 eureka:
   instance:
     leaseRenewalIntervalInSeconds: 10
@@ -34,6 +41,7 @@ spring:
   h2:
     console:
       enabled: true
+  cloud.config.enabled: false
 logging:
   level:
     root: ERROR

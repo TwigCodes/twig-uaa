@@ -52,6 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().frameOptions().disable()
             .and()
+                .csrf().ignoringAntMatchers("/actuator/**", "/oauth/**")
+            .and()
                 .authorizeRequests()
                 .antMatchers("/login","/logout.do").permitAll()
                 .antMatchers("/**").authenticated()
