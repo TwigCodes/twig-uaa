@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${auth.jwtSigningKey}")
+    @Value("${uaa.jwtSigningKey}")
     private String jwtSigningKey;
 
     private final AuthenticationManager authenticationManager;

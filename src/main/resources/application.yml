@@ -1,16 +1,25 @@
+# 定义服务端口
+server:
+  port: ${SERVER_PORT:8095}
 spring:
   profiles:
     active: dev
   jooq:
     sql-dialect: mysql
-# 定义服务端口
-server:
-  port: 8095
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    health-check-url-path: /actuator/health
   client:
+    registryFetchIntervalSeconds: 5
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-auth.jwtSigningKey: mySecret
+      defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
+uaa.jwtSigningKey: mySecret
 
 ---
 spring:
@@ -20,11 +29,6 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_UPPER=false
     username: sa
     password:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
   flyway:
     locations: classpath:db/migration/dev
   h2:
@@ -36,6 +40,7 @@ logging:
     org.springframework: DEBUG
     org.hibernate: DEBUG
     com.netflix.eureka: 'OFF'
+    com.twigcodes.uaa: DEBUG
 ---
 
 spring:
@@ -46,14 +51,9 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_ENDPOINT}/twigauth?useSSL=false
+    url: ${MYSQL_URI:jdbc:mysql://${MYSQL_ENDPOINT}/twigauth?useSSL=false}
     username: root
     password: ENC(eKw2P1jyrqKKs6KVg9Ql9iaJC8ve2kD8)
-  rabbitmq:
-    host: rabbitmq
-    port: 5672
-    username: guest
-    password: guest
   flyway:
     locations: "classpath:db/migration/prod"
 logging:
@@ -61,11 +61,5 @@ logging:
     root: ERROR
     org.springframework: ERROR
     org.hibernate: ERROR
-eureka:
-  instance:
-    hostname: uaa
-  client:
-    registerWithEureka: false
-    fetchRegistry: false
-    serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
+    com.netflix.eureka: ERROR
+    com.twigcodes.uaa: ERROR

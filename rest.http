@@ -1,3 +1,6 @@
 
 ###
 curl -X POST -k -vu test_client:test_secret http://localhost:8095/oauth/token -H "Accept: application/json" -d "password=password&username=admin&grant_type=password&scope=read&client_secret=test_secret&client_id=test_client"
+
+###
+curl "https://devops.datenkollektiv.de/renderBannerTxt?text=TwigCodes&font=slant"
