@@ -4,33 +4,33 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head lang="en">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>OAuth Server Index</title>
+    <title>OAuth 服务首页</title>
     <link rel="stylesheet" href="webjars/bootstrap/3.3.2/css/bootstrap.min.css"/>
 </head>
 <body>
 <div class="container">
-    <h1 class="page-header">OAuth2 服务器管理面板 </h1>
+    <h1 class="page-header">OAuth2 鉴权服务管理面板 </h1>
     <div class="row">
         <div class="col-md-12" >
             <span sec:authorize="isAuthenticated()" style="display: inline-block;">
-                    <a th:href="@{/logout}">Sign Out</a>
+                    <a th:href="@{/logout}">退出登录</a>
                 </span>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <h2>Approvals</h2>
+        <div class="col-md-10 col-md-offset-1">
+            <h2>批准</h2>
 
             <p>
-                If you revoke the approval for one scope of a client all tokens for that client will be removed as well.
+               请注意：如果取消一个客户端的某一作用范围的批准，那么这个客户端的所有 token 都会被删除。
             </p>
             <table class="table table-bordered">
                 <tr>
-                    <th>Client</th>
-                    <th>Scope</th>
-                    <th>Expires at</th>
-                    <th>Actions</th>
+                    <th>客户端</th>
+                    <th>范围</th>
+                    <th>失效时间</th>
+                    <th>动作</th>
                 </tr>
                 <tr th:each="app : ${approvals}">
                     <td th:value="${app.clientId}"></td>
@@ -57,15 +57,15 @@
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1" sec:authorize="hasRole('ROLE_OAUTH_ADMIN')">
-            <h2>Clients</h2>
+            <h2>客户端</h2>
             <table class="table table-bordered">
                 <tr>
-                    <th>Client ID</th>
-                    <th>Resource IDs</th>
-                    <th>Scopes</th>
-                    <th>Grant Types</th>
-                    <th>Roles</th>
-                    <th>Actions</th>
+                    <th>客户端 ID</th>
+                    <th>资源 ID 集合</th>
+                    <th>作用范围</th>
+                    <th>授权类型集合</th>
+                    <th>角色集合</th>
+                    <th>动作</th>
                 </tr>
                 <tr th:each="client : ${clientDetails}">
                     <td th:text="${client.clientId}"></td>

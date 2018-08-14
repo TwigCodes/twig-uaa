@@ -57,29 +57,6 @@ services:
     - 8761:8761
     networks:
     - docker-app
-  apicube:
-    image: registry.cn-beijing.aliyuncs.com/twigcodes/api-cube
-    ports:
-    - 8099:8099
-    depends_on:
-    - mongo
-    - redis
-    - rabbitmq
-    - discovery
-    - configserver
-    networks:
-    - docker-app
-  gateway:
-    image: registry.cn-beijing.aliyuncs.com/twigcodes/twig-gateway
-    ports:
-    - 8090:8090
-    depends_on:
-    - apicube
-    - rabbitmq
-    - discovery
-    - configserver
-    networks:
-    - docker-app
 volumes:
   api_db: {}
   redis-data: {}
