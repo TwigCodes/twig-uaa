@@ -4,3 +4,10 @@ curl -X POST -k -vu test_client:test_secret http://localhost:8095/oauth/token -H
 
 ###
 curl "https://devops.datenkollektiv.de/renderBannerTxt?text=TwigCodes&font=slant"
+
+###
+GET http://localhost:8095/oauth/authorize?response_type=token&client_id=discoveryClient&redirect_uri=http://localhost/123
+
+###
+GET http://localhost:8095/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0MzgzMDAyLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiOWYwMTMwZTUtNTJkMC00MjZjLWEwNDUtNzdhMDIxNTEwMzVjIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.WAT5s6DUSSNTN2GxXJpY52UUtSE8zDJXID_MKaPMVus

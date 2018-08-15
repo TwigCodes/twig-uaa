@@ -1,6 +1,7 @@
 INSERT INTO oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
 VALUES
-       ('test_client', NULL, '{bcrypt}$2a$10$2szDKjvKHJCWE6YQNznogOeQF3USZHmCYj1fG7YbfK.vnTgNKLzri', 'read', 'password,refresh_token', NULL, NULL, NULL, NULL, NULL, NULL);
+       ('test_client', NULL, '{bcrypt}$2a$10$2szDKjvKHJCWE6YQNznogOeQF3USZHmCYj1fG7YbfK.vnTgNKLzri', 'read', 'password,refresh_token', NULL, NULL, NULL, NULL, NULL, NULL),
+       ('discoveryClient', NULL, '{bcrypt}$2a$10$4zKKibXgkN9RbR8oKaaNvu8xP7WalNoqnBWLKALdLkB7.IxuN34.i', 'read,write', 'implicit,authorize_code,refresh_token', NULL, 'ROLE_ADMIN', NULL, NULL, NULL, NULL);
 INSERT INTO users (id, username, password, enabled, account_non_expired, credentials_non_expired, account_non_locked, name, mobile, email, avatar, pinyin_name_initials, created_time, updated_time, created_by, updated_by)
 VALUES
        (101, 'admin', '{bcrypt}$2a$10$vYA9wKn/hVGOtwQw2eHiceeIGNBdfLYpDmbzHgBSVmOfHXPH4iYdS', 'true', 'true', 'true', 'true',

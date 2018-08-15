@@ -41,12 +41,12 @@ spring:
   h2:
     console:
       enabled: true
-  cloud:
-    service-registry:
-      auto-registration:
-        enabled: false
-    config:
-      enabled: false
+  # cloud:
+  #   service-registry:
+  #     auto-registration:
+  #       enabled: false
+  #   config:
+  #     enabled: false
 logging:
   level:
     root: ERROR
