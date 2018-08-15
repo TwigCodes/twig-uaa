@@ -37,11 +37,16 @@ spring:
     username: sa
     password:
   flyway:
-    locations: classpath:db/migration/dev
+    locations: classpath:db/migration/h2
   h2:
     console:
       enabled: true
-  cloud.config.enabled: false
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
+    config:
+      enabled: false
 logging:
   level:
     root: ERROR
@@ -63,7 +68,7 @@ spring:
     username: ${MYSQL_USERNAME:test}
     password: ${MYSQL_PASSWORD:pass}
   flyway:
-    locations: "classpath:db/migration/prod"
+    locations: "classpath:db/migration/mysql"
     user: ${MYSQL_USERNAME:test}
     password: ${MYSQL_PASSWORD:pass}
 logging:

@@ -1,17 +1,17 @@
 package com.twigcodes.uaa.config;
 
-import java.util.Arrays;
-
-import javax.sql.DataSource;
-
 import com.twigcodes.uaa.config.token.TenantAwareTokenEnhancer;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -29,7 +29,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.util.Assert;
 
-import lombok.RequiredArgsConstructor;
+import javax.sql.DataSource;
+import java.util.Arrays;
 
 /**
  * AuthServerConfig
@@ -41,31 +42,34 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Value("${uaa.jwtSigningKey}")
     private String jwtSigningKey;
-
-    private final AuthenticationManager authenticationManager;
     private final DataSource dataSource;
-    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder oauthPasswordEncoder;
+    private @Qualifier("authenticationManagerBean") final AuthenticationManager authenticationManager;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-        oauthServer.tokenKeyAccess("isAuthenticated()")
-                .checkTokenAccess("permitAll()");
+        oauthServer
+            .tokenKeyAccess("isAuthenticated()")
+            .checkTokenAccess("permitAll()")
+            .passwordEncoder(oauthPasswordEncoder);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // 配置客户端信息，从数据库中读取，对应 oauth_client_details 表
-        clients.jdbc(dataSource);
+        clients.withClientDetails(jdbcClientDetailsService());
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         // 配置 token 的数据源、自定义的 tokenServices 等信息
         // 配置身份认证器，配置认证方式，TokenStore，TokenGranter，OAuth2RequestFactory
-        endpoints.tokenStore(tokenStore())
-                .tokenEnhancer(tokenEnhancerChain())
-                .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
+        endpoints
+            .tokenStore(tokenStore())
+            .tokenEnhancer(tokenEnhancerChain())
+            .approvalStore(approvalStore())
+            .authorizationCodeServices(authorizationCodeServices())
+            .authenticationManager(authenticationManager);;
     }
 
     @Bean
@@ -75,13 +79,15 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     protected AuthorizationCodeServices authorizationCodeServices() {
-        //授权码存储等处理方式类，使用 jdbc，操作 oauth_code 表
+        // 授权码存储等处理方式类，使用 jdbc，操作 oauth_code 表
         return new JdbcAuthorizationCodeServices(dataSource);
     }
 
     @Bean
     public JdbcClientDetailsService jdbcClientDetailsService() {
-        return new JdbcClientDetailsService(dataSource);
+       val clientDetailsService = new JdbcClientDetailsService(dataSource);
+       clientDetailsService.setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
+       return clientDetailsService;
     }
 
     @Bean
@@ -113,5 +119,4 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         defaultTokenServices.setSupportRefreshToken(true);
         return defaultTokenServices;
     }
-
 }

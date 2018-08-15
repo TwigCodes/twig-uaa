@@ -24,7 +24,7 @@ public final class Constants {
     public static final String ANONYMOUS_USER = "anonymoususer";
     public static final String DEFAULT_LANGUAGE = "zh-cn";
 
-    public static final String BASE_PACKAGE_NAME = "dev.local.smarthome.api";
+    public static final String BASE_PACKAGE_NAME = "com.twigcodes.uaa";
 
     // Caches
     // The cache to store the state passed by Jd Smart Cloud callback

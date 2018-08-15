@@ -1,7 +1,5 @@
 package com.twigcodes.uaa.domain.converter;
 
-import org.springframework.util.StringUtils;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.util.Arrays;

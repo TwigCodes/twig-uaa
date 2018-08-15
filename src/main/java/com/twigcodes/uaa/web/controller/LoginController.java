@@ -47,10 +47,10 @@ public class LoginController {
         return "redirect:/";
     }
 
-    @RequestMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
+//    @RequestMapping("/login")
+//    public String loginPage() {
+//        return "login";
+//    }
 
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
