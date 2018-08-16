@@ -10,5 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "uaa")
 public class AppProperties {
-    private String jwtSigningKey;
+    private String jwtSigningKey = "mySecret";
+    private String clientId = "discoveryClient";
+    private String clientSecret = "discoverySecret";
+    private String serverUrl = "http://localhost:8095";
 }

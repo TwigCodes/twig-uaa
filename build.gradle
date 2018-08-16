@@ -9,6 +9,7 @@ buildscript {
         hikariCPVersion = '3.1.0'
         problemVersion = '0.21.0'
         javassistVersion = '3.18.2-GA'
+        springFoxVersion = '2.9.2'
     }
     repositories {
         maven { setUrl('http://maven.aliyun.com/nexus/content/groups/public/') }
@@ -58,6 +59,9 @@ ext {
 }
 
 dependencies {
+    compile("io.springfox:springfox-swagger2:${springFoxVersion}")
+    compile("io.springfox:springfox-bean-validators:${springFoxVersion}")
+    compile("io.springfox:springfox-swagger-ui:${springFoxVersion}")
     compile("com.zaxxer:HikariCP:${hikariCPVersion}")
     compile("org.jooq:jooq:${jooqVersion}")
     compile("org.flywaydb:flyway-core:${flywayVersion}")
