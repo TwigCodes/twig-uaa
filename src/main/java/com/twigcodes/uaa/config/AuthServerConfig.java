@@ -1,17 +1,25 @@
 package com.twigcodes.uaa.config;
 
-import com.twigcodes.uaa.config.token.TenantAwareTokenEnhancer;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import java.util.Arrays;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import javax.sql.DataSource;
+
+import com.twigcodes.uaa.config.token.TenantAwareTokenEnhancer;
+
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.DefaultUserInfoRestTemplateFactory;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -29,8 +37,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.util.Assert;
 
-import javax.sql.DataSource;
-import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 /**
  * AuthServerConfig
@@ -44,7 +52,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private String jwtSigningKey;
     private final DataSource dataSource;
     private final PasswordEncoder oauthPasswordEncoder;
-    private @Qualifier("authenticationManagerBean") final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
@@ -69,7 +78,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
             .tokenEnhancer(tokenEnhancerChain())
             .approvalStore(approvalStore())
             .authorizationCodeServices(authorizationCodeServices())
-            .authenticationManager(authenticationManager);;
+            .authenticationManager(authenticationManager);
     }
 
     @Bean
@@ -119,4 +128,14 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         defaultTokenServices.setSupportRefreshToken(true);
         return defaultTokenServices;
     }
+
+    @Bean
+    public UserInfoRestTemplateFactory userInfoRestTemplateFactory(
+        ObjectProvider<List<UserInfoRestTemplateCustomizer>> customizers,
+        ObjectProvider<OAuth2ProtectedResourceDetails> details,
+        ObjectProvider<OAuth2ClientContext> context) {
+        return new DefaultUserInfoRestTemplateFactory(customizers, details, context);
+    }
+
+
 }

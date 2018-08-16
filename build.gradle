@@ -13,6 +13,7 @@ buildscript {
     repositories {
         maven { setUrl('http://maven.aliyun.com/nexus/content/groups/public/') }
         maven { setUrl('http://maven.aliyun.com/nexus/content/repositories/central') }
+        maven { setUrl('http://maven.aliyun.com/nexus/content/repositories/jcenter') }
         maven { setUrl('http://repo.spring.io/plugins-release') }
         maven { setUrl("https://plugins.gradle.org/m2/") }
     }
@@ -37,14 +38,15 @@ group = 'com.twigcodes'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-apply from: './gradle/docker.gradle'
-
 repositories {
-    mavenCentral()
+    maven { setUrl('http://maven.aliyun.com/nexus/content/repositories/central') }
+    maven { setUrl('http://maven.aliyun.com/nexus/content/repositories/jcenter') }
     maven {
         url 'https://repo.spring.io/libs-release'
     }
 }
+
+apply from: './gradle/docker.gradle'
 
 configurations {
     // 如果使用 undertow 或 jetty 需要把默认包含的 tomcat 排除在外
@@ -66,7 +68,6 @@ dependencies {
 //    compile("org.springframework.security:spring-security-oauth2-client")
 //    compile("org.springframework.security:spring-security-oauth2-jose")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-    compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")

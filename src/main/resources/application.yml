@@ -11,6 +11,7 @@ spring:
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USERNAME:guest}
     password: ${RABBITMQ_PASSWORD:guest}
+
 management:
   endpoints:
     # 让所有监控接口都接受 web 访问

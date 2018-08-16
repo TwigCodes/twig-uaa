@@ -29,6 +29,9 @@ public class LoginController {
 
     @RequestMapping("/")
     public ModelAndView root(Map<String,Object> model, Principal principal){
+        if (principal == null) {
+            return new ModelAndView("login");
+        }
         List<Approval> approvals=clientDetailsService.listClientDetails().stream()
             .map(clientDetails -> approvalStore.getApprovals(principal.getName(),clientDetails.getClientId()))
             .flatMap(Collection::stream)
@@ -46,11 +49,6 @@ public class LoginController {
             .forEach(tokenStore::removeAccessToken) ;
         return "redirect:/";
     }
-
-//    @RequestMapping("/login")
-//    public String loginPage() {
-//        return "login";
-//    }
 
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
