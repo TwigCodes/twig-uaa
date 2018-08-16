@@ -34,6 +34,8 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().frameOptions().disable()
             .and()
+                .authorizeRequests().antMatchers("/actuator/**").permitAll()
+            .and()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/oauth/token/revoke/**").permitAll()

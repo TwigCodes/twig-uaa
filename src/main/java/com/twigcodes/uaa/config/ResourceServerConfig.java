@@ -32,8 +32,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                    .requestMatcher(new OAuthRequestedMatcher())
-                    .authorizeRequests().anyRequest().fullyAuthenticated();
+            .requestMatcher(new OAuthRequestedMatcher())
+            .authorizeRequests().anyRequest().fullyAuthenticated();
     }
 
     private static class OAuthRequestedMatcher implements RequestMatcher {
