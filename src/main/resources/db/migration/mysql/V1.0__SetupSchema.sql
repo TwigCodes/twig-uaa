@@ -86,6 +86,8 @@ CREATE UNIQUE INDEX ux_users_username
   ON users (username);
 CREATE UNIQUE INDEX ux_users_mobile
   ON users (mobile);
+CREATE UNIQUE INDEX ux_users_email
+  ON users (email);
 # 用户组表
 DROP TABLE IF EXISTS groups;
 CREATE TABLE groups
@@ -123,7 +125,7 @@ CREATE TABLE positions
   created_by   VARCHAR(100) NOT NULL COMMENT '创建人',
   updated_by   VARCHAR(100) NOT NULL COMMENT '更新人'
 ) COMMENT '岗位表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
-# 用户和角色系表
+# 用户和岗位关系表
 DROP TABLE IF EXISTS users_positions_relation;
 CREATE TABLE users_positions_relation
 (
@@ -134,7 +136,7 @@ CREATE TABLE users_positions_relation
   updated_time DATETIME    NOT NULL DEFAULT now() COMMENT '更新时间',
   created_by   VARCHAR(100) NOT NULL COMMENT '创建人',
   updated_by   VARCHAR(100) NOT NULL COMMENT '更新人'
-) COMMENT '用户和角色关系表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) COMMENT '用户和岗位关系表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 # 角色表
 DROP TABLE IF EXISTS roles;
 CREATE TABLE roles
