@@ -31,7 +31,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: ./gradlew dependencies
+      - run: gradle dependencies
 
       - save_cache:
           paths:
@@ -39,7 +39,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: ./gradlew clean test
+      - run: gradle clean test
 
       - run:
           name: Save test results
@@ -57,7 +57,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: ./gradlew buildDocker
+          command: gradle buildDocker
 
       - save_cache:
           paths:
