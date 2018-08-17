@@ -56,7 +56,7 @@ public class SwaggerConfig {
     public Docket apiDoc() {
         return new Docket(DocumentationType.SWAGGER_2).select().paths(postPaths())
             .apis(RequestHandlerSelectors.basePackage(Constants.BASE_PACKAGE_NAME + ".web.rest"))
-            .paths(PathSelectors.any())
+            .paths(springBootActuatorJmxPaths())
             .build()
             .pathMapping("/")
             .securitySchemes(Collections.singletonList(oauth()))
