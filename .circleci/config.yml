@@ -57,16 +57,6 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
 
-      # use a primary image that already has Docker (recommended)
-      # or install it during a build like we do here
-      - run:
-          name: Install Docker client
-          command: |
-            set -x
-            VER="17.03.0-ce"
-            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
-            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-            mv /tmp/docker/* /usr/bin
       - run:
           name: Build Docker Image
           command: gradle buildDocker
@@ -75,11 +65,10 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "build.gradle" }}
-
-      - deploy:
-          name: Push application Docker image
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u ${DOCKER_REGISTRY_USRNAME} -p ${DOCKER_REGISTRY_PASSWORD} registry.cn-beijing.aliyuncs.com
-              docker push "registry.cn-beijing.aliyuncs.com/twigcodes/twig-uaa"
-            fi
+      # - deploy:
+      #     name: Push application Docker image
+      #     command: |
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u ${DOCKER_REGISTRY_USRNAME} -p ${DOCKER_REGISTRY_PASSWORD} registry.cn-beijing.aliyuncs.com
+      #         docker push "registry.cn-beijing.aliyuncs.com/twigcodes/twig-uaa"
+      #       fi

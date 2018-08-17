@@ -79,7 +79,7 @@ public class OAuthMvcTest {
 
     @Test
     public void givenNoToken_whenGetSecureRequest_thenUnauthorized() throws Exception {
-        mockMvc.perform(get("/user").header("Authorization", "Bearer " + "nonexistied")).andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/user")).andExpect(status().isUnauthorized());
     }
 
     @Test
