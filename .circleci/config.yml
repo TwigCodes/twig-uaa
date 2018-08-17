@@ -69,6 +69,6 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               TAG=0.1.$CIRCLE_BUILD_NUM
-              docker login -u $DOCKER_REGISTRY_USRNAME --password-stdin $DOCKER_REGISTRY_PASSWORD registry.cn-beijing.aliyuncs.com
+              docker login -u ${DOCKER_REGISTRY_USRNAME} --password-stdin ${DOCKER_REGISTRY_PASSWORD} registry.cn-beijing.aliyuncs.com
               docker push "registry.cn-beijing.aliyuncs.com/twigcodes/uaa"
             fi
