@@ -19,7 +19,6 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -47,7 +46,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
 public class SwaggerConfig {
 
     private static final String securitySchemaOAuth2 = "oauth2";
-    private static final String authorizationScopeGlobal = "global";
+    private static final String authorizationScopeGlobal = "read";
     private static final String authorizationScopeGlobalDesc = "accessEverything";
 
     private final AppProperties appProperties;
@@ -105,7 +104,7 @@ public class SwaggerConfig {
     @Bean
     public SecurityScheme oauth() {
         return new OAuthBuilder()
-                .name("OAuth2")
+                .name(securitySchemaOAuth2)
                 .scopes(scopes())
                 .grantTypes(grantTypes())
                 .build();

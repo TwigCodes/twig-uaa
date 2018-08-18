@@ -6,7 +6,7 @@ CREATE TABLE oauth_access_token
   authentication_id VARCHAR(255) COMMENT 'MD5加密过的 username, client_id, scope',
   user_name         VARCHAR(255) COMMENT '登录的用户名',
   client_id         VARCHAR(255) COMMENT '客户端ID',
-  authentication    BINARY COMMENT 'OAuth2Authentication.java 对象序列化后的二进制数据',
+  authentication    LONGBLOB COMMENT 'OAuth2Authentication.java 对象序列化后的二进制数据',
   refresh_token     VARCHAR(255) COMMENT 'MD5加密果的refresh_token的值'
 ) COMMENT '访问令牌表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS oauth_refresh_token;
@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS oauth_code;
 CREATE TABLE oauth_code
 (
   code           VARCHAR(255) COMMENT '授权码(未加密)',
-  authentication VARBINARY(255) COMMENT 'AuthorizationRequestHolder.java 对象序列化后的二进制数据'
+  authentication LONGBLOB COMMENT 'AuthorizationRequestHolder.java 对象序列化后的二进制数据'
 ) COMMENT '授权码表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 # client用户表
 DROP TABLE IF EXISTS oauth_client_details;

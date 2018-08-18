@@ -9,8 +9,8 @@ curl "https://devops.datenkollektiv.de/renderBannerTxt?text=TwigCodes&font=slant
 GET http://localhost:8095/oauth/authorize?response_type=token&client_id=discoveryClient&redirect_uri=http://localhost/123
 
 ###
-GET http://localhost:8095/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0NTYwMzUzLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiMDRmMzU5MzQtNTA2OS00NWE0LWFiZDMtYjFjY2YyYjlhODIzIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.tls96tFRsrSEguedXnbq2zKIL59fnH2VxcU4Skxixfo
+GET http://localhost:8095/oauth/check_token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0NjI1MjQwLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiNjJlYmJhZmUtY2VkZi00YTkwLTk4MzEtMWNmOWMwZDliMTVkIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.cE-fc3mB1HY-DPqhyI6pX5VRbbIlqip0q49viawnDIM
 
 ###
 GET http://localhost:8095/actuator/
@@ -18,3 +18,16 @@ GET http://localhost:8095/actuator/
 
 ###
 GET http://localhost:8095/oauth/check_token?token=123
+
+###
+GET http://localhost:8095/oauth/token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0NjI1MjQwLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiNjJlYmJhZmUtY2VkZi00YTkwLTk4MzEtMWNmOWMwZDliMTVkIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.cE-fc3mB1HY-DPqhyI6pX5VRbbIlqip0q49viawnDIM
+
+###
+GET http://localhost:8099/api/management/push?content=ter
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0NjI1MjQwLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiNjJlYmJhZmUtY2VkZi00YTkwLTk4MzEtMWNmOWMwZDliMTVkIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.cE-fc3mB1HY-DPqhyI6pX5VRbbIlqip0q49viawnDIM
+
+###
+http://localhost:8095/oauth/authorize?response_type=code&client_id=discoveryClient&redirect_uri=http://localhost:8099
+###
+curl -i -d "grant_type=authorization_code&code=LBeTKY&client_id=discoveryClient&client_secret=discoverySecret" -X POST http://localhost:8095/oauth/token
