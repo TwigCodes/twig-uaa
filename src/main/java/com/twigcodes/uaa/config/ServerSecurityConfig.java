@@ -34,7 +34,6 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/i18n/**")
             .antMatchers("/content/**")
             .antMatchers("/h2-console/**")
-            .antMatchers("/swagger-ui**")
             .antMatchers("/test/**");
     }
 
@@ -53,9 +52,9 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/v2/api-docs/**").permitAll()
-                .antMatchers("/swagger-resources/configuration/ui").permitAll()
-                .antMatchers("/swagger-ui**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
             .and()
                 .authorizeRequests()

@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private final SecurityProblemSupport problemSupport;
+    private final AppProperties appProperties;
 
     @Bean
     public RequestContextListener requestContextListener() {
@@ -29,7 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     }
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+    public void configure(ResourceServerSecurityConfigurer resources) {
         resources.resourceId("uaa");
     }
 
@@ -39,14 +40,16 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .authenticationEntryPoint(problemSupport)
             .accessDeniedHandler(problemSupport)
         .and()
-            .requestMatcher(new OAuthRequestedMatcher())
+            .requestMatcher(new OAuthRequestedMatcher(appProperties.getSecurity()))
             .authorizeRequests().anyRequest().fullyAuthenticated();
     }
 
+    @RequiredArgsConstructor
     private static class OAuthRequestedMatcher implements RequestMatcher {
+        private final AppProperties.Security security;
         public boolean matches(HttpServletRequest request) {
-            String auth = request.getHeader("Authorization");
-            boolean haveOauth2Token = (auth != null) && auth.startsWith("Bearer");
+            String auth = request.getHeader(security.getAuthorization().getHeader());
+            boolean haveOauth2Token = (auth != null) && auth.startsWith(security.getJwt().getTokenPrefix());
             boolean haveAccessToken = request.getParameter("access_token")!=null;
             return haveOauth2Token || haveAccessToken;
         }

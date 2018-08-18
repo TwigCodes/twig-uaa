@@ -12,16 +12,16 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import springfox.documentation.builders.AlternateTypeBuilder;
-import springfox.documentation.builders.AlternateTypePropertyBuilder;
-import springfox.documentation.builders.OAuthBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.*;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.ApiKeyVehicle;
+import springfox.documentation.swagger.web.SecurityConfiguration;
+import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.lang.reflect.Type;
@@ -46,6 +46,10 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @Configuration
 public class SwaggerConfig {
 
+    private static final String securitySchemaOAuth2 = "oauth2";
+    private static final String authorizationScopeGlobal = "global";
+    private static final String authorizationScopeGlobalDesc = "accessEverything";
+
     private final AppProperties appProperties;
     /**
      * 配置 Swagger 扫描哪些 API （不列出那些监控 API）
@@ -60,6 +64,7 @@ public class SwaggerConfig {
             .build()
             .pathMapping("/")
             .securitySchemes(Collections.singletonList(oauth()))
+            .securityContexts(Collections.singletonList(securityContext()))
             .directModelSubstitute(LocalDate.class, String.class)
             .genericModelSubstitutes(ResponseEntity.class)
             .apiInfo(apiInfo());
@@ -109,7 +114,7 @@ public class SwaggerConfig {
     @Bean
 	public List<GrantType> grantTypes() {
 		List<GrantType> grantTypes = new ArrayList<>();
-		LoginEndpoint loginEndpoint = new LoginEndpoint(appProperties.getServerUrl()+"/oauth/authorize");
+		LoginEndpoint loginEndpoint = new LoginEndpoint(appProperties.getSecurity().getOAuth2().getAuthorizeUrl());
         grantTypes.add(new ImplicitGrant(loginEndpoint, "token"));
         return grantTypes;
 	}
@@ -121,6 +126,15 @@ public class SwaggerConfig {
 		return list;
     }
 
+    @Bean
+    public SecurityConfiguration securityInfo() {
+        return SecurityConfigurationBuilder.builder()
+            .clientId(appProperties.getSecurity().getOAuth2().getClientId())
+            .clientSecret(appProperties.getSecurity().getOAuth2().getClientSecret())
+            .useBasicAuthenticationWithAccessCodeGrant(true)
+            .build();
+    }
+
     private Predicate<String> postPaths() {
 		return regex("/.*");
 	}
@@ -129,7 +143,21 @@ public class SwaggerConfig {
 		return regex("^/(?!env|restart|pause|resume|refresh).*$");
     }
 
+    private SecurityContext securityContext() {
+        return SecurityContext.builder().securityReferences(defaultAuth())
+            .forPaths(PathSelectors.any())
+            .build();
+    }
 
+    private List<SecurityReference> defaultAuth() {
+
+        final AuthorizationScope authorizationScope =
+            new AuthorizationScope(authorizationScopeGlobal, authorizationScopeGlobalDesc);
+        final AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Collections
+            .singletonList(new SecurityReference(securitySchemaOAuth2, authorizationScopes));
+    }
     /**
      * 对 API 的概要信息进行定制
      *

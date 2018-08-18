@@ -1,23 +1,18 @@
 package com.twigcodes.uaa.config;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import com.twigcodes.uaa.config.token.TenantAwareTokenEnhancer;
-
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.DefaultUserInfoRestTemplateFactory;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -35,32 +30,33 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.util.Assert;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
-import lombok.RequiredArgsConstructor;
-import lombok.val;
+import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * AuthServerConfig
  */
+@Import(SecurityProblemSupport.class)
 @EnableAuthorizationServer
 @Configuration
 @RequiredArgsConstructor
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${uaa.jwtSigningKey}")
-    private String jwtSigningKey;
+    private final AppProperties appProperties;
     private final DataSource dataSource;
-    private final PasswordEncoder oauthPasswordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final SecurityProblemSupport problemSupport;
 
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer
-            .tokenKeyAccess("isAuthenticated()")
+            .accessDeniedHandler(problemSupport)
             .checkTokenAccess("permitAll()")
-            .passwordEncoder(oauthPasswordEncoder);
+            .tokenKeyAccess("isAuthenticated()");
     }
 
     @Override
@@ -79,6 +75,15 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
             .approvalStore(approvalStore())
             .authorizationCodeServices(authorizationCodeServices())
             .authenticationManager(authenticationManager);
+    }
+
+    @Bean
+    @Primary
+    public DefaultTokenServices tokenServices() {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
     }
 
     @Bean
@@ -106,10 +111,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
-        Assert.notNull(jwtSigningKey, "No JWT signing key present, check config params for application.jwtSigningKey");
-
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(jwtSigningKey);
+        converter.setSigningKey(appProperties.getSecurity().getJwt().getSecret());
+        // final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
+        // converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
         return converter;
     }
 
@@ -121,21 +126,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
-    @Primary
-    public DefaultTokenServices tokenServices() {
-        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore());
-        defaultTokenServices.setSupportRefreshToken(true);
-        return defaultTokenServices;
-    }
-
-    @Bean
     public UserInfoRestTemplateFactory userInfoRestTemplateFactory(
         ObjectProvider<List<UserInfoRestTemplateCustomizer>> customizers,
         ObjectProvider<OAuth2ProtectedResourceDetails> details,
         ObjectProvider<OAuth2ClientContext> context) {
         return new DefaultUserInfoRestTemplateFactory(customizers, details, context);
     }
-
-
 }
