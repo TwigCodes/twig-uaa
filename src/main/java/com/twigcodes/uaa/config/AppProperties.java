@@ -1,6 +1,8 @@
 package com.twigcodes.uaa.config;
 
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,14 +1,12 @@
 package com.twigcodes.uaa.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

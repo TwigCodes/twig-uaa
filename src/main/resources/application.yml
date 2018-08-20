@@ -11,7 +11,6 @@ spring:
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USERNAME:guest}
     password: ${RABBITMQ_PASSWORD:guest}
-
 management:
   endpoints:
     # 让所有监控接口都接受 web 访问
@@ -27,7 +26,6 @@ eureka:
     registryFetchIntervalSeconds: 5
     serviceUrl:
       defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
-uaa.jwtSigningKey: mySecret
 
 ---
 spring:
@@ -50,9 +48,13 @@ spring:
   #     enabled: false
 logging:
   level:
-    root: ERROR
+    ROOT: DEBUG
+    org.apache.http: DEBUG
     org.springframework: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
     org.hibernate: DEBUG
+    com.netflix.discovery: 'OFF'
     com.netflix.eureka: 'OFF'
     com.twigcodes.uaa: DEBUG
   file: ${LOGGING_FILE_PATH:/Users/wangpeng/workspace/logs/uaa.log}

@@ -84,6 +84,39 @@ CREATE UNIQUE INDEX ux_users_mobile
   ON users (mobile);
 CREATE UNIQUE INDEX ux_users_email
   ON users (email);
+DROP TABLE IF EXISTS twig_client_registration;
+CREATE TABLE twig_client_registration (
+  registration_id           VARCHAR(255) NOT NULL COMMENT '客户端注册 ID',
+  client_id                 VARCHAR(256) NOT NULL COMMENT '客户端ID',
+  client_secret             VARCHAR(256) COMMENT '客户端密匙',
+  client_auth_method        VARCHAR(256) COMMENT '客户端鉴权方法',
+  auth_grant_type           VARCHAR(256) COMMENT '授权类型',
+  redirect_uri              VARCHAR(256) COMMENT '重定向 URL',
+  scopes                    VARCHAR(256) COMMENT '权限范围集合，逗号分隔',
+  client_name               VARCHAR(256) COMMENT '客户端名称',
+  authorization_uri         VARCHAR(512) COMMENT '授权 URL',
+  token_uri                 VARCHAR(512) COMMENT '令牌 URL',
+  user_info_uri             VARCHAR(512) COMMENT '用户信息 URL',
+  user_info_attribute_name  VARCHAR(512) COMMENT '用户名字段名',
+  jwk_set_uri               VARCHAR(512) COMMENT 'jwk URI',
+  PRIMARY KEY(registration_id)
+);
+DROP TABLE IF EXISTS user_connections;
+CREATE TABLE user_connections (
+  userId BIGINT NOT NULL COMMENT '用户 id',
+  providerId VARCHAR(255) NOT NULL COMMENT '第三方登录提供商',
+  providerUserId VARCHAR(255) COMMENT '第三方登录用户 Id',
+  rank INT NOT NULL COMMENT '第三方登录用户名',
+  displayName VARCHAR(255) COMMENT '第三方登录用户名',
+  profileUrl VARCHAR(512) COMMENT '第三方登录用户档案 URL',
+  imageUrl VARCHAR(512) COMMENT '第三方登录用户头像 URL',
+  accessToken VARCHAR(512) NOT NULL COMMENT '第三方登录访问令牌',
+  secret VARCHAR(512) COMMENT '第三方登录密文',
+  refreshToken VARCHAR(512) COMMENT '第三方登录刷新令牌',
+  expireTime BIGINT COMMENT '第三方登录令牌失效时间戳',
+  PRIMARY KEY (userId, providerId, providerUserId)
+);
+CREATE UNIQUE INDEX user_connections_rank on user_connections(userId, providerId, rank);
 DROP TABLE IF EXISTS groups;
 CREATE TABLE groups
 (

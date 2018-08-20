@@ -88,6 +88,22 @@ CREATE UNIQUE INDEX ux_users_mobile
   ON users (mobile);
 CREATE UNIQUE INDEX ux_users_email
   ON users (email);
+DROP TABLE IF EXISTS user_connections;
+CREATE TABLE user_connections (
+  userId BIGINT NOT NULL COMMENT '用户 id',
+  providerId VARCHAR(255) NOT NULL COMMENT '第三方登录提供商',
+  providerUserId VARCHAR(255) COMMENT '第三方登录用户 Id',
+  rank INT NOT NULL COMMENT '第三方登录用户名',
+  displayName VARCHAR(255) COMMENT '第三方登录用户名',
+  profileUrl VARCHAR(512) COMMENT '第三方登录用户档案 URL',
+  imageUrl VARCHAR(512) COMMENT '第三方登录用户头像 URL',
+  accessToken VARCHAR(512) NOT NULL COMMENT '第三方登录访问令牌',
+  secret VARCHAR(512) COMMENT '第三方登录密文',
+  refreshToken VARCHAR(512) COMMENT '第三方登录刷新令牌',
+  expireTime BIGINT COMMENT '第三方登录令牌失效时间戳',
+  PRIMARY KEY (userId, providerId, providerUserId)
+) COMMENT '用户第三方帐户连接表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE UNIQUE INDEX user_connections_rank on user_connections(userId, providerId, rank);
 # 用户组表
 DROP TABLE IF EXISTS groups;
 CREATE TABLE groups

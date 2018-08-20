@@ -2,6 +2,11 @@ INSERT INTO oauth_client_details (client_id, resource_ids, client_secret, scope,
 VALUES
        ('test_client', NULL, '{bcrypt}$2a$10$2szDKjvKHJCWE6YQNznogOeQF3USZHmCYj1fG7YbfK.vnTgNKLzri', 'read', 'password,refresh_token', NULL, NULL, NULL, NULL, NULL, 'read'),
        ('discoveryClient', NULL, '{bcrypt}$2a$10$4zKKibXgkN9RbR8oKaaNvu8xP7WalNoqnBWLKALdLkB7.IxuN34.i', 'read,write', 'client_credentials,implicit,authorization_code,refresh_token,password', NULL, 'ROLE_ADMIN', NULL, NULL, NULL, 'read,write');
+INSERT INTO twig_client_registration (registration_id, client_id, client_secret, client_auth_method, auth_grant_type, redirect_uri, scopes, client_name, authorization_uri, token_uri, user_info_uri, user_info_attribute_name, jwk_set_uri)
+VALUES
+       ('facebook', '276922193033609', 'feb020543d7dae5d23c7badbb8b2061f', 'post', 'authorization_code', '{baseUrl}/login/oauth2/code/{registrationId}', 'email,user_likes', 'Facebook', 'https://www.facebook.com/dialog/oauth', 'https://graph.facebook.com/oauth/access_token', 'https://graph.facebook.com/me', 'id', null),
+       ('github', '2996e06e984652b79aa3', 'ca9e795428ea2f0839bd891b85cd0de52e3a8b8a', 'post', 'authorization_code', '{baseUrl}/login/oauth2/code/{registrationId}', 'user,repo', 'Github', 'https://github.com/login/oauth/authorize', 'https://github.com/login/oauth/access_token', 'https://api.github.com/user', 'login', null),
+       ('linkedin', '819z3s07e8zfim', 'nfccn7SN1E93kIIu', 'post', 'authorization_code', '{baseUrl}/login/oauth2/code/{registrationId}', 'r_basicprofile,r_emailaddress', 'LinkedIn', 'https://www.linkedin.com/oauth/v2/authorization', 'https://www.linkedin.com/oauth/v2/accessToken', 'https://api.linkedin.com/v1/people/~?format=json', 'id', null);
 INSERT INTO users (id, username, password, enabled, account_non_expired, credentials_non_expired, account_non_locked, name, mobile, email, avatar, pinyin_name_initials, created_time, updated_time, created_by, updated_by)
 VALUES
        (101, 'admin', '{bcrypt}$2a$10$vYA9wKn/hVGOtwQw2eHiceeIGNBdfLYpDmbzHgBSVmOfHXPH4iYdS', 'true', 'true', 'true', 'true',

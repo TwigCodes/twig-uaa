@@ -1,6 +1,6 @@
 package com.twigcodes.uaa.config;
 
-import com.twigcodes.uaa.config.token.TenantAwareTokenEnhancer;
+import com.twigcodes.uaa.config.security.TenantAwareTokenEnhancer;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
