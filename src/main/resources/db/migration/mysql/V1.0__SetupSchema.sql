@@ -88,6 +88,23 @@ CREATE UNIQUE INDEX ux_users_mobile
   ON users (mobile);
 CREATE UNIQUE INDEX ux_users_email
   ON users (email);
+DROP TABLE IF EXISTS twig_client_registration;
+CREATE TABLE twig_client_registration (
+  registration_id           VARCHAR(255) NOT NULL COMMENT '客户端注册 ID',
+  client_id                 VARCHAR(256) NOT NULL COMMENT '客户端ID',
+  client_secret             VARCHAR(256) COMMENT '客户端密匙',
+  client_auth_method        VARCHAR(256) COMMENT '客户端鉴权方法',
+  auth_grant_type           VARCHAR(256) COMMENT '授权类型',
+  redirect_uri              VARCHAR(256) COMMENT '重定向 URL',
+  scopes                    VARCHAR(256) COMMENT '权限范围集合，逗号分隔',
+  client_name               VARCHAR(256) COMMENT '客户端名称',
+  authorization_uri         VARCHAR(512) COMMENT '授权 URL',
+  token_uri                 VARCHAR(512) COMMENT '令牌 URL',
+  user_info_uri             VARCHAR(512) COMMENT '用户信息 URL',
+  user_info_attribute_name  VARCHAR(512) COMMENT '用户名字段名',
+  jwk_set_uri               VARCHAR(512) COMMENT 'jwk URI',
+  PRIMARY KEY(registration_id)
+) COMMENT '用户第三方帐户配置表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS user_connections;
 CREATE TABLE user_connections (
   userId BIGINT NOT NULL COMMENT '用户 id',
