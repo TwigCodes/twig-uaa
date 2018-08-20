@@ -71,7 +71,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .and()
                 .authorizeRequests()
-                .antMatchers("/h2-console/**", "/login/oauth2/code/**", "/login**", "/webjars/**", "/actuator/**", "/v2/api-docs", "/swagger**").permitAll()
+                .antMatchers("/h2-console/**", "/login/oauth2/code/**", "/login**", "/webjars/**", "/actuator/**", "/v2/api-docs", "/swagger-ui.html", "/swagger-resources/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin().loginProcessingUrl("/login.do")
