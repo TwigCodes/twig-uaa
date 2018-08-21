@@ -52,10 +52,10 @@ task buildDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage, 
     description = "打包应用构建镜像"
     group = "registry.cn-beijing.aliyuncs.com/twigcodes"
     inputDir = project.file("${project.buildDir}/docker")
-    tags = ["${group}/${project.name}:latest".toString(), "${group}/${project.name}:${project.version.toString()}".toString()]
+    tags = ["${group}/${rootProject.name}:latest".toString(), "${group}/${rootProject.name}:${project.version.toString()}".toString()]
 }
 
 task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage, dependsOn: 'buildDocker') {
     group = "registry.cn-beijing.aliyuncs.com/twigcodes"
-    imageName = "${group}/${project.name}"
+    imageName = "${group}/${rootProject.name}"
 }
