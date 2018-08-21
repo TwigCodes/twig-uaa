@@ -36,7 +36,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -106,13 +105,10 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
     private GrantedAuthoritiesMapper userAuthoritiesMapper() {
         return (authorities) -> {
             Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
-            mappedAuthorities.add(Authority.builder().authority("ROLE_ADMIN").build());
-//            authorities.forEach(authority -> {
-//                OAuth2UserAuthority oauth2UserAuthority = (OAuth2UserAuthority)authority;
-//                Map<String, Object> userAttributes = oauth2UserAuthority.getAttributes();
-//
-//            });
-
+            authorities.forEach(authority -> {
+                OAuth2UserAuthority oauth2UserAuthority = (OAuth2UserAuthority)authority;
+                mappedAuthorities.add(Authority.builder().authority(oauth2UserAuthority.getAuthority()).build());
+            });
             return mappedAuthorities;
         };
     }

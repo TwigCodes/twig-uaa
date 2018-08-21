@@ -7,7 +7,7 @@ CREATE TABLE oauth_access_token
   user_name         VARCHAR(256) COMMENT '登录的用户名',
   client_id         VARCHAR(256) COMMENT '客户端ID',
   authentication    BINARY COMMENT 'OAuth2Authentication.java 对象序列化后的二进制数据',
-  refresh_token     VARCHAR(256) COMMENT 'MD5加密果的refresh_token的值'
+  refresh_token     VARCHAR(256) COMMENT 'MD5加密后的refresh_token的值'
 );
 DROP TABLE IF EXISTS oauth_refresh_token;
 CREATE TABLE oauth_refresh_token
@@ -45,7 +45,7 @@ CREATE TABLE oauth_client_details
   access_token_validity   INTEGER COMMENT '访问令牌有效时间值(单位:秒)',
   refresh_token_validity  INTEGER COMMENT '更新令牌有效时间值(单位:秒)',
   additional_information  VARCHAR(4096) COMMENT '预留字段',
-  autoapprove             VARCHAR(256) COMMENT '用户是否自动Approval操作',
+  autoapprove             VARCHAR(256) COMMENT '自动允许的 Scope 列表',
   CONSTRAINT pk_oauth_client_details_client_id PRIMARY KEY (client_id)
 );
 DROP TABLE IF EXISTS oauth_client_token;

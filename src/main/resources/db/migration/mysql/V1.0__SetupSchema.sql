@@ -7,7 +7,7 @@ CREATE TABLE oauth_access_token
   user_name         VARCHAR(255) COMMENT '登录的用户名',
   client_id         VARCHAR(255) COMMENT '客户端ID',
   authentication    LONGBLOB COMMENT 'OAuth2Authentication.java 对象序列化后的二进制数据',
-  refresh_token     VARCHAR(255) COMMENT 'MD5加密果的refresh_token的值'
+  refresh_token     VARCHAR(255) COMMENT 'MD5加密后的refresh_token的值'
 ) COMMENT '访问令牌表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS oauth_refresh_token;
 CREATE TABLE oauth_refresh_token
