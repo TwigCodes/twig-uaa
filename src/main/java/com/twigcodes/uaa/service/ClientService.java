@@ -1,9 +1,9 @@
 package com.twigcodes.uaa.service;
 
+import com.twigcodes.commons.problem.ResourceNotFoundException;
 import com.twigcodes.uaa.domain.OAuth2Client;
 import com.twigcodes.uaa.repository.ClientRepository;
 import com.twigcodes.uaa.service.dto.ClientDTO;
-import com.twigcodes.uaa.web.rest.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.data.domain.Page;

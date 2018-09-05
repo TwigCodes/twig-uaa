@@ -50,7 +50,6 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private final AuthenticationManager authenticationManager;
     private final SecurityProblemSupport problemSupport;
 
-
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer

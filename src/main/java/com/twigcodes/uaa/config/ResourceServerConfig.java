@@ -41,7 +41,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .accessDeniedHandler(problemSupport)
         .and()
             .requestMatcher(new OAuthRequestedMatcher(appProperties.getSecurity()))
-            .authorizeRequests().anyRequest().fullyAuthenticated();
+            .authorizeRequests()
+            .anyRequest().fullyAuthenticated();
     }
 
     @RequiredArgsConstructor

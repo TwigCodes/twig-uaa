@@ -26,7 +26,10 @@ eureka:
     registryFetchIntervalSeconds: 5
     serviceUrl:
       defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
-
+commons:
+  swaggerApiInfo:
+    scanPackages: com.twigcodes.uaa.web.rest
+    title: "推码科技用户鉴权系统交互式 API 文档"
 ---
 spring:
   profiles: dev

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -66,11 +67,25 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable()
             .and()
                 .csrf()
-                .ignoringAntMatchers("/actuator/**", "/h2-console/**")
+                .ignoringAntMatchers(
+                    "/actuator/**",
+                    "/h2-console/**",
+                    "/swagger-ui.html**"
+                )
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .and()
                 .authorizeRequests()
-                .antMatchers("/h2-console/**", "/login/oauth2/code/**", "/login**", "/webjars/**", "/actuator/**", "/v2/api-docs", "/swagger-ui.html", "/swagger-resources/**").permitAll()
+                .antMatchers(
+                    HttpMethod.GET,
+                    "/h2-console/**",
+                    "/login/oauth2/code/**",
+                    "/login**",
+                    "/actuator/**",
+                    "/webjars/**",
+                    "/v2/api-docs",
+                    "/swagger-ui.html**",
+                    "/swagger-resources/**",
+                    "favicon.ico").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin().loginProcessingUrl("/login.do")
