@@ -42,7 +42,7 @@ services:
       - docker-app
 
   discovery:
-    image: registry.cn-beijing.aliyuncs.com/twigcodes/twig-discovery
+    image: twigcodes/twig-discovery
     ports:
       - 8761:8761
     environment:
