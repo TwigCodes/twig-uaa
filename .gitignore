@@ -196,3 +196,4 @@ classpath-data.json
 nodejs/
 npm/
 yarn/
+dist/
