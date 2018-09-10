@@ -10,8 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class AuthServerIntegrationTest {
 
-    @Test
-    public void whenLoadApplication_thenSuccess() {
-
-    }
+  @Test
+  public void whenLoadApplication_thenSuccess() {}
 }

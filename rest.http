@@ -31,3 +31,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZ
 http://localhost:8095/oauth/authorize?response_type=code&client_id=discoveryClient&redirect_uri=http://localhost:8099
 ###
 curl -i -d "grant_type=authorization_code&code=LBeTKY&client_id=discoveryClient&client_secret=discoverySecret" -X POST http://localhost:8095/oauth/token
+
+###
+POST https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd5eaca40a1d44102&secret=8789092f7ce0facb4687e1c07d9d8e34&code=CODE&grant_type=authorization_code
+
+###

@@ -1,6 +1,9 @@
 package com.twigcodes.uaa.config;
 
 import com.twigcodes.uaa.config.security.TenantAwareTokenEnhancer;
+import java.util.Arrays;
+import java.util.List;
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
@@ -32,103 +35,101 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
-import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * AuthServerConfig
- */
-@Import(SecurityProblemSupport.class)
+/** AuthServerConfig */
+@Import({SecurityProblemSupport.class, UaaProperties.class})
 @EnableAuthorizationServer
 @Configuration
 @RequiredArgsConstructor
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    private final AppProperties appProperties;
-    private final DataSource dataSource;
-    private final AuthenticationManager authenticationManager;
-    private final SecurityProblemSupport problemSupport;
+  private final UaaProperties uaaProperties;
+  private final DataSource dataSource;
+  private final AuthenticationManager authenticationManager;
+  private final SecurityProblemSupport problemSupport;
 
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-        oauthServer
-            .accessDeniedHandler(problemSupport)
-            .checkTokenAccess("permitAll()")
-            .tokenKeyAccess("isAuthenticated()");
-    }
+  @Override
+  public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
+    oauthServer
+        .authenticationEntryPoint(problemSupport)
+        .accessDeniedHandler(problemSupport)
+        .checkTokenAccess("permitAll()")
+        .tokenKeyAccess("isAuthenticated()");
+  }
 
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // 配置客户端信息，从数据库中读取，对应 oauth_client_details 表
-        clients.withClientDetails(jdbcClientDetailsService());
-    }
+  @Override
+  public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+    // 配置客户端信息，从数据库中读取，对应 oauth_client_details 表
+    clients.withClientDetails(jdbcClientDetailsService());
+  }
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        // 配置 token 的数据源、自定义的 tokenServices 等信息
-        // 配置身份认证器，配置认证方式，TokenStore，TokenGranter，OAuth2RequestFactory
-        endpoints
-            .tokenStore(tokenStore())
-            .tokenEnhancer(tokenEnhancerChain())
-            .approvalStore(approvalStore())
-            .authorizationCodeServices(authorizationCodeServices())
-            .authenticationManager(authenticationManager);
-    }
+  @Override
+  public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    // 配置 token 的数据源、自定义的 tokenServices 等信息
+    // 配置身份认证器，配置认证方式，TokenStore，TokenGranter，OAuth2RequestFactory
+    endpoints
+        .tokenStore(tokenStore())
+        .tokenEnhancer(tokenEnhancerChain())
+        .approvalStore(approvalStore())
+        .authorizationCodeServices(authorizationCodeServices())
+        .authenticationManager(authenticationManager);
+  }
 
-    @Bean
-    @Primary
-    public DefaultTokenServices tokenServices() {
-        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore());
-        defaultTokenServices.setSupportRefreshToken(true);
-        return defaultTokenServices;
-    }
+  @Bean
+  @Primary
+  public DefaultTokenServices tokenServices() {
+    DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+    defaultTokenServices.setTokenStore(tokenStore());
+    defaultTokenServices.setSupportRefreshToken(true);
+    return defaultTokenServices;
+  }
 
-    @Bean
-    public ApprovalStore approvalStore() {
-        return new JdbcApprovalStore(dataSource);
-    }
+  @Bean
+  public ApprovalStore approvalStore() {
+    return new JdbcApprovalStore(dataSource);
+  }
 
-    @Bean
-    protected AuthorizationCodeServices authorizationCodeServices() {
-        // 授权码存储等处理方式类，使用 jdbc，操作 oauth_code 表
-        return new JdbcAuthorizationCodeServices(dataSource);
-    }
+  @Bean
+  protected AuthorizationCodeServices authorizationCodeServices() {
+    // 授权码存储等处理方式类，使用 jdbc，操作 oauth_code 表
+    return new JdbcAuthorizationCodeServices(dataSource);
+  }
 
-    @Bean
-    public JdbcClientDetailsService jdbcClientDetailsService() {
-       val clientDetailsService = new JdbcClientDetailsService(dataSource);
-       clientDetailsService.setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
-       return clientDetailsService;
-    }
+  @Bean
+  public JdbcClientDetailsService jdbcClientDetailsService() {
+    val clientDetailsService = new JdbcClientDetailsService(dataSource);
+    clientDetailsService.setPasswordEncoder(
+        PasswordEncoderFactories.createDelegatingPasswordEncoder());
+    return clientDetailsService;
+  }
 
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(this.accessTokenConverter());
-    }
+  @Bean
+  public TokenStore tokenStore() {
+    return new JwtTokenStore(this.accessTokenConverter());
+  }
 
-    @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(appProperties.getSecurity().getJwt().getSecret());
-        // final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
-        // converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
-        return converter;
-    }
+  @Bean
+  public JwtAccessTokenConverter accessTokenConverter() {
+    JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+    converter.setSigningKey(uaaProperties.getSecurity().getJwt().getSecret());
+    // final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new
+    // ClassPathResource("mytest.jks"), "mypass".toCharArray());
+    // converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
+    return converter;
+  }
 
-    @Bean
-    public TokenEnhancerChain tokenEnhancerChain() {
-        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(new TenantAwareTokenEnhancer(), accessTokenConverter()));
-        return tokenEnhancerChain;
-    }
+  @Bean
+  public TokenEnhancerChain tokenEnhancerChain() {
+    TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+    tokenEnhancerChain.setTokenEnhancers(
+        Arrays.asList(new TenantAwareTokenEnhancer(), accessTokenConverter()));
+    return tokenEnhancerChain;
+  }
 
-    @Bean
-    public UserInfoRestTemplateFactory userInfoRestTemplateFactory(
-        ObjectProvider<List<UserInfoRestTemplateCustomizer>> customizers,
-        ObjectProvider<OAuth2ProtectedResourceDetails> details,
-        ObjectProvider<OAuth2ClientContext> context) {
-        return new DefaultUserInfoRestTemplateFactory(customizers, details, context);
-    }
+  @Bean
+  public UserInfoRestTemplateFactory userInfoRestTemplateFactory(
+      ObjectProvider<List<UserInfoRestTemplateCustomizer>> customizers,
+      ObjectProvider<OAuth2ProtectedResourceDetails> details,
+      ObjectProvider<OAuth2ClientContext> context) {
+    return new DefaultUserInfoRestTemplateFactory(customizers, details, context);
+  }
 }
