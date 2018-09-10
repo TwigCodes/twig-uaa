@@ -1,0 +1,79 @@
+import com.moowork.gradle.node.yarn.YarnTask;
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url('http://repo.spring.io/plugins-release') }
+        maven { url("https://plugins.gradle.org/m2/") }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "com.h2database:h2:${h2Version}"
+        classpath "gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:${flywayVersion}"
+    }
+}
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.flywaydb.flyway'
+apply from: './docker.gradle'
+group = 'com.twigcodes'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+repositories {
+    maven { url 'https://repo.spring.io/libs-release' }
+    maven { url  "https://dl.bintray.com/twigcodes/libs" }
+    mavenCentral()
+}
+configurations {
+    // 如果使用 undertow 或 jetty 需要把默认包含的 tomcat 排除在外
+    compile.exclude module: 'spring-boot-starter-tomcat'
+}
+ext {
+    springCloudVersion = 'Finchley.SR1'
+}
+dependencies {
+    implementation("com.twigcodes:commons-spring-boot-starter:${twigCommonsVersion}")
+    implementation "io.springfox:springfox-swagger-ui:${springFoxVersion}"
+    implementation("com.zaxxer:HikariCP:${hikariCPVersion}")
+    implementation("org.flywaydb:flyway-core:${flywayVersion}")
+    implementation("org.javassist:javassist:${javassistVersion}")
+    implementation("org.springframework.security:spring-security-oauth2-client")
+    implementation("org.springframework.security:spring-security-oauth2-jose")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-undertow")
+    implementation("org.springframework.cloud:spring-cloud-starter-config")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-oauth2")
+    implementation("org.springframework.cloud:spring-cloud-starter-sleuth")
+    runtime('org.springframework.boot:spring-boot-devtools')
+    runtime("mysql:mysql-connector-java")
+    runtime("com.h2database:h2")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor('org.projectlombok:lombok')
+    compileOnly('org.projectlombok:lombok')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation('io.rest-assured:rest-assured')
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+flyway {
+    url = 'jdbc:h2:./db/tmp;MODE=MySQL;DATABASE_TO_UPPER=false;'
+    user = 'sa'
+    password = ''
+}
+configurations.compileOnly.extendsFrom(configurations.annotationProcessor)
+bootJar {
+    dependsOn ':uaa-ui:yarn_buildProd'
+    into('static') {
+        from "${project(':uaa-ui').projectDir}/dist/browser"
+    }
+}
+bootRun.dependsOn(':uaa-ui:yarn_build')

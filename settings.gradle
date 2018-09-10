@@ -11,4 +11,6 @@ buildscript {
 
 apply plugin: 'net.vivin.gradle-semantic-build-versioning'
 
+include 'uaa-ui'
+include 'uaa-backend'
 rootProject.name="twig-uaa"

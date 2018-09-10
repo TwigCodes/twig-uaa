@@ -1,24 +1,24 @@
 language: java
 
 jdk:
-- oraclejdk8
+  - oraclejdk8
 
 sudo: required
 
 services:
-- docker
+  - docker
 
 install: true
 
 script: ./gradlew bootJar
 
 before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 
 deploy:
   provider: releases
@@ -30,4 +30,4 @@ deploy:
     tags: true
 
 after_deploy:
-- ./gradlew pushDocker
+  - ./gradlew :uaa-backend:pushDocker
