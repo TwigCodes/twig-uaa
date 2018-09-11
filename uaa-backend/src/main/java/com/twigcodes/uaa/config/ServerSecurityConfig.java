@@ -51,6 +51,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
         "/static/**",
         "/*.js",
         "/*.css",
+        "/webjars/**",
         "/favicon.ico",
         "*.bundle.*");
   }
@@ -80,15 +81,14 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
           .antMatchers(
               HttpMethod.GET,
-              "/h2-console/**",
+              "/",
               "/login",
               "/index.html",
-              "/actuator/**",
-              "/webjars/**",
               "/v2/api-docs",
+              "/actuator/**",
+              "/h2-console/**",
               "/swagger-ui.html**",
-              "/swagger-resources/**",
-              "favicon.ico").permitAll()
+              "/swagger-resources/**").permitAll()
           .anyRequest().authenticated()
       .and()
         .logout().logoutSuccessUrl("/");
@@ -104,7 +104,8 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
       .and()
         .userInfoEndpoint()
         .userAuthoritiesMapper(this.userAuthoritiesMapper())
-        .userService(persistOAuth2UserService());
+        .userService(persistOAuth2UserService())
+      ;
   }
 
   private GrantedAuthoritiesMapper userAuthoritiesMapper() {

@@ -1,14 +1,15 @@
 package com.twigcodes.uaa.web.rest;
 
 import java.security.Principal;
+
+import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /** UserResource */
-@RestController
+@FrameworkEndpoint
 public class UserResource {
 
-  @GetMapping(value = "/user")
+  @GetMapping("/user")
   public Principal getUser(Principal user) {
     return user;
   }
