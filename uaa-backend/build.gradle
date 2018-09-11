@@ -74,7 +74,7 @@ task copyStatic(type: Copy) {
     from "${project(':uaa-ui').projectDir}/dist/browser"
     into "${project.projectDir}/src/main/resources/static"
 }
-classes.dependsOn(":uaa-backend:copyStatic")
+processResources.dependsOn(":uaa-backend:copyStatic")
 clean {
     delete fileTree("${project.projectDir}/src/main/resources/static")
 }

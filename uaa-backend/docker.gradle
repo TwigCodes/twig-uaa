@@ -1,3 +1,4 @@
+import com.bmuschko.gradle.docker.tasks.image.*;
 buildscript {
     repositories {
         jcenter()
@@ -23,7 +24,7 @@ docker {
     }
 }
 
-task createDockerfile(type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, dependsOn: ['bootJar']) {
+task createDockerfile(type: Dockerfile, dependsOn: ['bootJar']) {
     description = "自动创建 Dockerfile"
     destFile = project.file('src/main/docker/Dockerfile')
     from 'openjdk:8-jre-alpine'
@@ -47,14 +48,14 @@ task copyDockerFiles(type: Copy, dependsOn: 'createDockerfile') {
     exclude "**/*.yml"
 }
 
-task buildDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage, dependsOn: 'copyDockerFiles') {
+task buildDocker(type: DockerBuildImage, dependsOn: 'copyDockerFiles') {
     description = "打包应用构建镜像"
     group = "twigcodes"
     inputDir = project.file("${project.buildDir}/docker")
     tags = ["${group}/${rootProject.name}:latest".toString(), "${group}/${rootProject.name}:${project.version.toString()}".toString()]
 }
 
-task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage, dependsOn: 'buildDocker') {
+task pushDocker(type: DockerPushImage, dependsOn: 'buildDocker') {
     group = "twigcodes"
     imageName = "${group}/${rootProject.name}"
 }

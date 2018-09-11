@@ -25,3 +25,6 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
 }
+subprojects {
+    version = rootProject.version
+}
