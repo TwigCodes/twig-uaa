@@ -197,4 +197,4 @@ nodejs/
 npm/
 yarn/
 dist/
-static/
+**/static/

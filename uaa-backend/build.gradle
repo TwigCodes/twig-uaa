@@ -69,9 +69,12 @@ flyway {
     password = ''
 }
 configurations.compileOnly.extendsFrom(configurations.annotationProcessor)
-bootJar {
-    dependsOn ':uaa-ui:yarn_buildProd'
-    into('static') {
-        from "${project(':uaa-ui').projectDir}/dist/browser"
-    }
+task copyStatic(type: Copy) {
+    dependsOn ':uaa-ui:yarn_build'
+    from "${project(':uaa-ui').projectDir}/dist/browser"
+    into "${project.projectDir}/src/main/resources/static"
+}
+classes.dependsOn(":uaa-backend:copyStatic")
+clean {
+    delete fileTree("${project.projectDir}/src/main/resources/static")
 }
