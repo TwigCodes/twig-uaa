@@ -1,6 +1,5 @@
 version: '3.3'
 services:
-
   # redis:
   #   image: registry.cn-beijing.aliyuncs.com/twigcodes/redis:4-alpine
   #   command: [ "redis-server", "--protected-mode", "no" ]
@@ -10,63 +9,52 @@ services:
   #   - redis-data:/data
   #   networks:
   #   - docker-app
-  # mysql:
-  #   image: mysql:5
-  #   ports:
-  #   - "3306:3306"
-  #   volumes:
-  #   - api_db:/var/lib/mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: 'test_pass'
-  #     MYSQL_USER: 'test'
-  #     MYSQL_PASS: 'pass'
-  #   networks:
-  #   - docker-app
-#  keycloak:
-#    image: jboss/keycloak:4.4.0.Final
-#    restart: on-failure
-#    command:
-#    - '-b'
-#    - '0.0.0.0'
-#    - '-Dkeycloak.migration.action=import'
-#    - '-Dkeycloak.migration.provider=dir'
-#    - '-Dkeycloak.migration.dir=/config/'
-#    - '-Dkeycloak.migration.strategy=IGNORE_EXISTING'
-#    volumes:
-#    - ./config:/config/
-#    environment:
-#    - KEYCLOAK_USER=admin
-#    - KEYCLOAK_PASSWORD=password
-#    - DB_VENDOR=postgres
-#    - DB_USER=admin
-#    - DB_PASSWORD=password
-#    - DB_ADDR=keycloak-db
-#    - DB_PORT=5432
-#    - DB_DATABASE=keycloakdb
-#    ports:
-#    - '8081:8080'
-#    depends_on:
-#    - keycloak-db
-#    networks:
-#    - docker-app
-#
-#  keycloak-db:
-#    image: postgres:10
-#    environment:
-#      POSTGRES_USER: admin
-#      POSTGRES_PASSWORD: password
-#      POSTGRES_DB: keycloakdb
-#    volumes:
-#    - pgdata:/var/lib/postgresql/data
-#    networks:
-#    - docker-app
-#  rabbitmq:
-#    image: rabbitmq:3-management-alpine
-#    ports:
-#      - '5672:5672' # JMS 端口
-#      - '15672:15672' # 管理端口 default user:pass = guest:guest
-#    networks:
-#      - docker-app
+  keycloak:
+    image: twigcodes/keycloak
+    restart: on-failure
+    command:
+      - '-b'
+      - '0.0.0.0'
+      - '-Dkeycloak.migration.action=import'
+      - '-Dkeycloak.migration.provider=dir'
+      - '-Dkeycloak.migration.dir=/config/'
+      - '-Dkeycloak.migration.strategy=IGNORE_EXISTING'
+    volumes:
+      - ./keycloak/config:/config/
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=password
+      - KEYCLOAK_LOGLEVEL=DEBUG
+      - DB_VENDOR=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=password
+      - DB_ADDR=keycloak-db
+      - DB_PORT=5432
+      - DB_DATABASE=keycloakdb
+    ports:
+      - '9999:8080'
+    depends_on:
+      - keycloak-db
+    networks:
+      - docker-app
+
+  keycloak-db:
+    image: postgres:10
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keycloakdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - docker-app
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - '5672:5672' # JMS 端口
+      - '15672:15672' # 管理端口 default user:pass = guest:guest
+    networks:
+      - docker-app
 
   discovery:
     image: twigcodes/twig-discovery
@@ -88,7 +76,7 @@ services:
     networks:
       - docker-app
 volumes:
-  api_db: {}
+  pgdata: {}
   redis-data: {}
   esdata: {}
 networks:

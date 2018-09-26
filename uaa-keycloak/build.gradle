@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url('http://repo.spring.io/plugins-release') }
+        maven { url("https://plugins.gradle.org/m2/") }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply from: './docker.gradle'
+group = 'com.twigcodes'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+repositories {
+    maven { url 'https://repo.spring.io/libs-release' }
+    maven { url  "https://dl.bintray.com/twigcodes/libs" }
+    mavenCentral()
+}
+ext {
+    springCloudVersion = 'Finchley.SR1'
+}
+dependencies {
+    implementation("com.twigcodes:commons-spring-boot-starter:${twigCommonsVersion}")
+    implementation "io.springfox:springfox-swagger-ui:${springFoxVersion}"
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation('org.keycloak:keycloak-spring-boot-starter')
+    implementation("org.springframework.boot:spring-boot-starter-security")
+//    implementation("org.springframework.security:spring-security-oauth2-client")
+//    implementation("org.springframework.security:spring-security-oauth2-jose")
+//    implementation("org.springframework.cloud:spring-cloud-starter-oauth2")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.cloud:spring-cloud-starter-config")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-sleuth")
+    runtime('org.springframework.boot:spring-boot-devtools')
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor('org.projectlombok:lombok')
+    compileOnly('org.projectlombok:lombok')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation('io.rest-assured:rest-assured')
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+    }
+}
+configurations.compileOnly.extendsFrom(configurations.annotationProcessor)

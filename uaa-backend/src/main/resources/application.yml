@@ -5,8 +5,6 @@ server:
 spring:
   profiles:
     active: dev
-  jooq:
-    sql-dialect: mysql
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}

@@ -36,3 +36,20 @@ curl -i -d "grant_type=authorization_code&code=LBeTKY&client_id=discoveryClient&
 POST https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd5eaca40a1d44102&secret=8789092f7ce0facb4687e1c07d9d8e34&code=CODE&grant_type=authorization_code
 
 ###
+curl -X POST -k -vu login-app:855ee82d-38d0-4d6a-b7e0-22726097cc96 http://localhost:9999/auth/realms/twigcodes/protocol/openid-connect/auth -H "Accept: application/json" -d "response_type=token&password=password&username=twiguser&grant_type=password&scope=profile&client_secret=855ee82d-38d0-4d6a-b7e0-22726097cc96&client_id=login-app"
+
+###
+POST http://localhost:9999/auth/realms/twigcodes/protocol/openid-connect/auth
+Content-Type: application/x-www-form-urlencoded
+
+password=password&username=twiguser&grant_type=password&scope=openid&client_secret=855ee82d-38d0-4d6a-b7e0-22726097cc96&client_id=login-app
+
+###
+POST https://auth.twigcodes.com/auth/realms/twigcodes/protocol/openid-connect/auth HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+response_type=token
+&client_id=login-app
+&client_secret=b888bb5b-2627-453e-b3a7-2fb79c923032
+&redirect_uri=http://localhost:8080/webjars/springfox-swagger-ui/oauth2-redirect.html
+&state=V2VkIFNlcCAyNiAyMDE4IDIyOjAwOjAzIEdNVCswODAwICjkuK3lm73moIflh4bml7bpl7Qp

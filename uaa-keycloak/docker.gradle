@@ -1,0 +1,61 @@
+import com.bmuschko.gradle.docker.tasks.image.*;
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:3.2.8'
+    }
+}
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
+repositories {
+    jcenter()
+}
+
+final String registryUsername = System.getenv("DOCKER_REGISTRY_USERNAME")
+final String registryPassword = System.getenv("DOCKER_REGISTRY_PASSWORD")
+
+docker {
+    registryCredentials {
+        username = "$registryUsername"
+        password = "$registryPassword"
+    }
+}
+
+task createDockerfile(type: Dockerfile, dependsOn: ['bootJar']) {
+    description = "自动创建 Dockerfile"
+    destFile = project.file('src/main/docker/Dockerfile')
+    from 'openjdk:8-jre-alpine'
+    volume '/tmp'
+    addFile "${project.name}-${project.version.toString()}.jar", "app.jar"
+    instruction { 'ENTRYPOINT [' +
+            '"java", ' +
+            '"-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n", ' +
+            '"-Dspring.profiles.active=prod", ' +
+            '"-Djava.security.egd=file:/dev/./urandom", ' +
+            '"-jar","/app.jar"]'}
+    maintainer 'Peng Wang "wpcfan@gmail.com"'
+}
+
+task copyDockerFiles(type: Copy, dependsOn: 'createDockerfile') {
+    description = "拷贝 Dockerfile 和相应数据到镜像构建文件夹"
+    from 'src/main/docker'
+    from "${project.buildDir}/libs"
+    into { "${project.buildDir}/docker" }
+    include "*"
+    exclude "**/*.yml"
+}
+
+task buildDocker(type: DockerBuildImage, dependsOn: 'copyDockerFiles') {
+    description = "打包应用构建镜像"
+    group = "twigcodes"
+    inputDir = project.file("${project.buildDir}/docker")
+    tags = ["${group}/${rootProject.name}:latest".toString(), "${group}/${rootProject.name}:${project.version.toString()}".toString()]
+}
+
+task pushDocker(type: DockerPushImage, dependsOn: 'buildDocker') {
+    group = "twigcodes"
+    imageName = "${group}/${rootProject.name}"
+}

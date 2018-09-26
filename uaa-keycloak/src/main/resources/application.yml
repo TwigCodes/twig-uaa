@@ -1,0 +1,73 @@
+server:
+  port: ${SERVER_PORT:8080}
+spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+  # security:
+  #   oauth2:
+  #     client:
+  #       registration:
+  #         keycloak:
+  #           client-id: ${CLIENT_ID:login-app}
+  #           client-secret: ${CLIENT_SECRET:855ee82d-38d0-4d6a-b7e0-22726097cc96}
+  #       provider:
+  #         keycloak:
+  #           authorization-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/auth
+  #           token-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/token
+  #           user-info-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/userinfo
+  #           jwk-set-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/keys
+keycloak:
+  auth-server-url: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/auth
+  realm: master
+  public-client: false
+  resource: service-app
+  principal-attribute: preferred_username
+  credentials:
+    secret: a654daac-aa18-4597-9df4-5cb39c3c7a11
+  use-resource-role-mappings: true
+  # pkce: true
+#security:
+#  oauth2:
+#    client:
+#      client-id: ${CLIENT_ID:login-app}
+#      client-secret: ${CLIENT_SECRET:855ee82d-38d0-4d6a-b7e0-22726097cc96}
+#      user-authorization-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/auth/realms/${relam:twigcodes}/protocol/openid-connect/auth
+#      access-token-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/auth/realms/${relam:twigcodes}/protocol/openid-connect/token
+#      authenticationScheme: header
+#      clientAuthenticationScheme: header
+#      scope:
+#      - profile
+#      - email
+#    resource:
+#      user-info-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:9999}/auth/realms/${relam:twigcodes}/protocol/openid-connect/userinfo
+management:
+  endpoints:
+    # 让所有监控接口都接受 web 访问
+    web.exposure.include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    health-check-url-path: /actuator/health
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
+commons:
+  swaggerApiInfo:
+    scanPackages: com.twigcodes.uaa.web.rest
+    title: "推码科技用户鉴权系统交互式 API 文档"
+logging:
+  level:
+    org.apache.http: ERROR
+    org.springframework: ERROR
+    org.springframework.security: ERROR
+    com.netflix.discovery: 'OFF'
+    com.netflix.eureka: 'OFF'
+    com.twigcodes.uaa: DEBUG
+    org.keycloak: DEBUG
