@@ -5,7 +5,7 @@ import { AppComponent } from './core/containers/app.component';
 import { CoreModule } from './core/core.module';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [],
   imports: [BrowserModule, CoreModule],
   providers: [],
   bootstrap: [AppComponent]

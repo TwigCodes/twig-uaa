@@ -10,7 +10,7 @@ services:
 
 install: true
 
-script: ./gradlew bootJar
+script: ./gradlew :uaa-backend:bootJar
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
