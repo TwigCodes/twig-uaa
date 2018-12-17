@@ -1,13 +1,13 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.4.RELEASE'
+        springBootVersion = '2.0.7.RELEASE'
         h2Version = '1.4.197'
         hikariCPVersion = '3.1.0'
         javassistVersion = '3.18.2-GA'
         springFoxVersion = '2.9.2'
-        flywayVersion = '5.1.4'
-        twigCommonsVersion = '0.2.6-Candidate'
-        keycloakVersion = '4.4.0.Final'
+        flywayVersion = '5.2.4'
+        twigCommonsVersion = '0.2.9'
+        keycloakVersion = '4.7.0.Final'
         gradleNodeVersion = '1.2.0'
     }
     ext['lombok.version'] = '1.18.2'

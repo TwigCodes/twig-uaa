@@ -28,7 +28,7 @@ configurations {
     compile.exclude module: 'spring-boot-starter-tomcat'
 }
 ext {
-    springCloudVersion = 'Finchley.SR1'
+    springCloudVersion = 'Finchley.SR2'
 }
 dependencies {
     implementation("com.twigcodes:commons-spring-boot-starter:${twigCommonsVersion}")
@@ -51,7 +51,7 @@ dependencies {
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime("mysql:mysql-connector-java")
     runtime("com.h2database:h2")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor('org.projectlombok:lombok')
     compileOnly('org.projectlombok:lombok')
     testImplementation('org.springframework.boot:spring-boot-starter-test')

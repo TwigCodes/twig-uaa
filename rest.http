@@ -53,3 +53,21 @@ response_type=token
 &client_secret=b888bb5b-2627-453e-b3a7-2fb79c923032
 &redirect_uri=http://localhost:8080/webjars/springfox-swagger-ui/oauth2-redirect.html
 &state=V2VkIFNlcCAyNiAyMDE4IDIyOjAwOjAzIEdNVCswODAwICjkuK3lm73moIflh4bml7bpl7Qp
+
+###
+POST https://auth.twigcodes.com/auth/realms/twigcodes/protocol/openid-connect/token
+Authorization: Basic login-app 942bfe03-9851-4db8-b100-8393c9c6c9cd
+Content-Type: application/x-www-form-urlencoded; charset=utf-8
+Accept: application/json
+
+password=X*bcYp4x&grant_type=password&username=twigadmin
+
+###
+POST http://pcustomer1.bjcapitalland.com.cn/customer-service-houseinfosvc/api/service/jdQueryHouseInfo
+
+{
+    "pageNumber": 1,                 //分页：当前第几页
+    "pageSize": 1,                    //分页：每页显示条数
+    "projectId": "PROJECT1436",    //项目ID
+    "periodId": "PERIOD1671"      //分期ID
+}
